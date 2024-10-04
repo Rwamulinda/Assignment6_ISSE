@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Check if a filename is provided as an argument
+if [ $# -eq 1 ]; then
+    # Create a backup of the file
+    cp "$1" "$1.BAK"
+    
+    # Use sed to perform the date normalization in-place
+    sed -i -E -f - "$1" <<'EOF'
+    # Replace month names with their numeric equivalents
+    s/\b(Jan|January)\b/01/gI
+    s/\b(Feb|February)\b/02/gI
+    s/\b(Mar|March)\b/03/gI
+    s/\b(Apr|April)\b/04/gI
+    s/\b(May)\b/05/gI
+    s/\b(Jun|June)\b/06/gI
+    s/\b(Jul|July)\b/07/gI
+    s/\b(Aug|August)\b/08/gI
+    s/\b(Sep|Sept|September)\b/09/gI
+    s/\b(Oct|October)\b/10/gI
+    s/\b(Nov|November)\b/11/gI
+    s/\b(Dec|December)\b/12/gI
+
+    # Handle DD Month YYYY or DD-Month-YYYY (Convert to YYYY--MM--DD)
+    s/\b([0-9]{1,2})[ \t\-]+([0-9]{2})[ \t]+([0-9]{4})\b/\3--\2--\1/g
+
+    # Handle Month DD, YYYY (Convert to YYYY--MM--DD)
+    s/\b([A-Za-z]+)[ \t]+([0-9]{1,2}),[ \t]+([0-9]{4})\b/\3--\1--\2/g
+
+    # Handle DD/MM/YYYY or DD-MM-YYYY (Convert to YYYY--MM--DD)
+    s/\b([0-9]{1,2})[-\/]([0-9]{1,2})[-\/]([0-9]{4})\b/\3--\2--\1/g
+EOF
+
+    echo "Date normalization complete! Backup saved as $1.BAK"
+else
+    echo "Usage: $0 <filename>"
+fi
+

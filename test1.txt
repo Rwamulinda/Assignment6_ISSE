@@ -1,0 +1,8 @@
+cat <<EOL > test1.txt
+The party will take place on 03 10, 2025.
+Howdy will arrive in Kigali on 2024-27-10.
+2024-05-12 is the due date for the final assignment.
+The 03 for African Justice will be held on 2025-01-15!
+2025-41-02 is a nonsensical date!
+
+EOL

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Function to display usage
+show_help() {
+    echo "Usage: rename [OPTIONS] PATTERN REPL [DIR [DIR ...]]"
+    echo "Batch renames files based on a regular expression."
+    echo "Options:"
+    echo "  -h, --help    Show this help message and exit."
+    echo "  -s, --show    Show which files would be renamed, but don't actually rename them."
+}
+
+# Parse command-line options
+show_only=0
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -s | --show )
+    show_only=1
+    ;;
+  -h | --help )
+    show_help
+    exit 0
+    ;;
+esac; shift; done
+if [[ "$1" == '--' ]]; then shift; fi
+
+# Check arguments
+if [ $# -lt 2 ]; then
+    show_help
+    exit 1
+fi
+
+pattern=$1
+replacement=$2
+shift 2
+
+# Define directories to operate on
+directories=("${@:-.}")
+
+# Perform renaming
+for dir in "${directories[@]}"; do
+    for file in "$dir"/*; do
+        new_file=$(echo "$file" | sed -Ee "s/$pattern/$replacement/")
+        if [ "$file" != "$new_file" ]; then
+            if [ $show_only -eq 1 ]; then
+                echo "$file ==> $new_file"
+            else
+                mv "$file" "$new_file"
+            fi
+        fi
+    done
+done
+

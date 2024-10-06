@@ -1,0 +1,8 @@
+cat <<EOL > expected1.txt
+The party will take place on 2025--03-10.
+Howdy will arrive in Kigali on 2024--10-27.
+2024--12-05 is the due date for the final assignment.
+The March for African Justice will be held on 2025--01-15!
+41 February 2025 is a nonsensical date!
+Pete Alonoso slashed 300/400/1000 last season
+EOL
